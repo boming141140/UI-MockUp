@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=UTF-8 />
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<script src="three.js"></script>
+<script src="GLTFLoader.js"></script>
+<script src="OrbitControls.js"></script>
+<script>
+    let scene, camera, renderer;
+    function init() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xdddddd);
+        camera = new THREE.PerspectiveCamera(.3,window.innerWidth/window.innerHeight,0.1,500);
+        camera.rotation.y = 45/180*Math.PI;
+        camera.position.x = 20;
+        camera.position.y = 70;
+        camera.position.z = 300;
+
+        renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+
+        controls = new THREE.OrbitControls(camera,renderer.domElement);
+        controls.addEventListener('change', renderer);
+        hlight = new THREE.AmbientLight (0x404040,100);
+        scene.add(hlight);
+        directionalLight = new THREE.DirectionalLight(0xffffff,20);
+        directionalLight.position.set(0,1,0);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+      
+
+
+
+        let loader = new THREE.GLTFLoader();
+        loader.load('Model1.gltf', function(gltf){
+            car = gltf.scene.children[0];
+            car.scale.set(0.5,0.5,0.5);
+            scene.add(gltf.scene);
+            animate();
+        });
+    }
+    function animate() {
+        renderer.render(scene,camera);
+        requestAnimationFrame(animate);
+    }
+    init();
+</script>
+</body>
+</html>
